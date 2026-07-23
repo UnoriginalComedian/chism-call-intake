@@ -377,9 +377,13 @@
     if(WEBHOOK_URL){
       statusEl.classList.remove('hidden','ok','err');
       statusEl.textContent = 'Sending to automation…';
+      /* No explicit Content-Type header: setting one forces a CORS preflight
+         that Zapier's Catch Hook endpoint doesn't answer, so the browser
+         blocks the request outright ("Failed to fetch"). Omitting it keeps
+         this a CORS-simple request (browser defaults to text/plain), and
+         Zapier still parses the JSON body fine either way. */
       fetch(WEBHOOK_URL, {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
         body: JSON.stringify(payload)
       }).then(function(res){
         if(!res.ok) throw new Error('HTTP ' + res.status);
