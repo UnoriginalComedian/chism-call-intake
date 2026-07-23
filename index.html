@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Chism Brothers Painting — Call Intake</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --cbp-blue:#0079C1;
+    --cbp-blue-dark:#005e97;
+    --cbp-orange:#F89828;
+    --cbp-green:#6DB33F;
+    --ink:#1f2733;
+    --muted:#5b6673;
+    --line:#e2e7ee;
+    --bg:#f4f7fa;
+    --card:#ffffff;
+    --err:#d64545;
+    --radius:14px;
+    --head:"Oswald","Gotham Condensed",Arial Narrow,sans-serif;
+    --body:"Inter","Gotham",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;font-family:var(--body);color:var(--ink);background:var(--bg);
+    line-height:1.5;-webkit-font-smoothing:antialiased;
+  }
+  .topbar{
+    background:linear-gradient(135deg,var(--cbp-blue),var(--cbp-blue-dark));
+    color:#fff;padding:22px 18px;
+  }
+  .topbar-inner{max-width:640px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .logo-mark{
+    display:flex;align-items:center;justify-content:center;gap:2px;
+    background:#fff;border-radius:12px;padding:7px 11px;box-shadow:0 4px 14px rgba(0,0,0,.18);
+    font-family:var(--head);font-weight:700;font-size:26px;line-height:1;letter-spacing:1px;
+  }
+  .logo-mark .c{color:var(--cbp-blue);}
+  .logo-mark .b{color:var(--cbp-green);}
+  .logo-mark .p{color:var(--cbp-orange);}
+  .brand-text .name{font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:1.2px;text-transform:uppercase;}
+  .brand-text .tag{font-size:12px;opacity:.9;letter-spacing:.3px;}
+  .wrap{max-width:640px;margin:0 auto;padding:20px 16px 60px;}
+  .lead{
+    background:var(--card);border-radius:var(--radius);padding:16px 20px;margin-bottom:18px;
+    border-top:5px solid var(--cbp-orange);box-shadow:0 2px 10px rgba(20,40,70,.05);
+  }
+  .lead h1{font-family:var(--head);font-weight:700;font-size:21px;margin:0 0 4px;color:var(--cbp-blue);letter-spacing:.4px;}
+  .lead p{margin:0;color:var(--muted);font-size:13.5px;}
+  .card{
+    background:var(--card);border-radius:var(--radius);padding:18px 20px 20px;margin-bottom:16px;
+    box-shadow:0 2px 10px rgba(20,40,70,.05);border-left:4px solid var(--cbp-blue);
+  }
+  .card.toggle-open{border-left-color:var(--cbp-green);background:#fbfdfb;}
+  .sec-head{display:flex;align-items:center;gap:10px;margin:0 0 4px;}
+  .sec-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:24px;height:24px;border-radius:50%;background:var(--cbp-blue);color:#fff;
+    font-family:var(--head);font-weight:700;font-size:13px;flex:none;
+  }
+  .card h2{font-family:var(--head);font-weight:600;font-size:16.5px;margin:0;letter-spacing:.3px;text-transform:uppercase;}
+  .sec-sub{color:var(--muted);font-size:12.5px;margin:2px 0 14px 34px;}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 14px;}
+  .grid .full{grid-column:1 / -1;}
+  @media(max-width:520px){.grid{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  label.lbl{font-weight:600;font-size:13px;color:var(--ink);}
+  .req{color:var(--err);font-weight:700;margin-left:2px;}
+  .hint{font-size:11.5px;color:var(--muted);font-weight:400;}
+  input[type=text],input[type=email],input[type=tel],input[type=date],input[type=time],select,textarea{
+    font-family:var(--body);font-size:16px;color:var(--ink);
+    padding:10px 12px;border:1.5px solid var(--line);border-radius:9px;background:#fff;width:100%;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  textarea{resize:vertical;min-height:70px;}
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--cbp-blue);box-shadow:0 0 0 3px rgba(0,121,193,.14);
+  }
+  .field.invalid input,.field.invalid select,.field.invalid textarea{
+    border-color:var(--err) !important;box-shadow:0 0 0 3px rgba(214,69,69,.12);
+  }
+  .err-msg{color:var(--err);font-size:12px;display:none;}
+  .field.invalid .err-msg{display:block;}
+  /* toggle switch rows */
+  .toggle-row{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:4px 0;
+  }
+  .toggle-row .lbl{font-size:14.5px;}
+  .switch{position:relative;display:inline-block;width:46px;height:26px;flex:none;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{
+    position:absolute;cursor:pointer;inset:0;background:#cbd3dc;border-radius:26px;transition:.15s;
+  }
+  .slider:before{
+    position:absolute;content:"";height:20px;width:20px;left:3px;bottom:3px;
+    background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 3px rgba(0,0,0,.3);
+  }
+  .switch input:checked + .slider{background:var(--cbp-green);}
+  .switch input:checked + .slider:before{transform:translateX(20px);}
+  .cond-body{margin-top:12px;display:none;}
+  .cond-body.open{display:block;}
+  /* submit */
+  .actions{margin-top:6px;text-align:center;}
+  .btn{
+    font-family:var(--head);font-weight:700;font-size:17px;letter-spacing:.5px;text-transform:uppercase;
+    background:var(--cbp-orange);color:#fff;border:none;border-radius:11px;
+    padding:14px 38px;cursor:pointer;box-shadow:0 4px 14px rgba(248,152,40,.35);width:100%;
+    transition:transform .1s,box-shadow .15s,background .15s;
+  }
+  .btn:hover{background:#e88a1a;}
+  .btn:active{transform:translateY(1px);}
+  .btn.secondary{
+    background:#fff;color:var(--cbp-blue);border:1.5px solid var(--cbp-blue);box-shadow:none;
+    text-transform:none;font-family:var(--body);font-weight:600;font-size:14px;padding:10px 18px;width:auto;
+  }
+  .btn.secondary:hover{background:#f2f8fd;}
+  .form-note{color:var(--muted);font-size:12px;margin-top:12px;text-align:center;}
+  .hidden{display:none !important;}
+  .success{
+    background:var(--card);border-radius:var(--radius);padding:26px 22px;
+    border-top:6px solid var(--cbp-green);box-shadow:0 2px 12px rgba(20,40,70,.08);
+  }
+  .success h2{font-family:var(--head);font-size:21px;color:var(--cbp-blue);margin:0 0 4px;letter-spacing:.4px;}
+  .success .sub{color:var(--muted);font-size:13px;margin:0 0 16px;}
+  .summary-box{
+    background:#f4f7fa;border:1.5px solid var(--line);border-radius:10px;padding:14px 16px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;white-space:pre-wrap;
+    color:var(--ink);margin-bottom:12px;
+  }
+  .summary-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .status-line{font-size:12.5px;color:var(--muted);margin-bottom:14px;padding:8px 12px;border-radius:8px;background:#fbfdfb;border:1px solid var(--line);}
+  .status-line.err{color:var(--err);background:#fdf3f3;border-color:#f2c7c7;}
+  .status-line.ok{color:#3d7a1e;background:#f3f9ee;border-color:#cfe6bb;}
+  footer{text-align:center;color:var(--muted);font-size:11.5px;padding:6px 0 30px;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="logo-mark"><span class="c">C</span><span class="b">B</span><span class="p">P</span></div>
+      <div class="brand-text">
+        <div class="name">Chism Bros. Painting</div>
+        <div class="tag">Call Intake — Internal Use</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="lead">
+      <h1>Log This Call</h1>
+      <p>Get the caller's phone and name first, then fill in what you can. Fields marked <span class="req">*</span> are required — everything else is optional.</p>
+    </div>
+
+    <form id="intakeForm" novalidate>
+
+      <!-- 1. CALLER -->
+      <section class="card">
+        <div class="sec-head"><span class="sec-num">1</span><h2>Caller</h2></div>
+        <div class="grid">
+          <div class="field" data-req><label class="lbl">First name<span class="req">*</span></label><input type="text" name="first_name" autocomplete="off" /><span class="err-msg">Enter a first name.</span></div>
+          <div class="field" data-req><label class="lbl">Last name<span class="req">*</span></label><input type="text" name="last_name" autocomplete="off" /><span class="err-msg">Enter a last name.</span></div>
+          <div class="field" data-req data-type="phone"><label class="lbl">Phone<span class="req">*</span></label><input type="tel" name="phone" placeholder="(619) 555-0123" inputmode="tel" /><span class="err-msg">Enter a valid phone number.</span></div>
+          <div class="field"><label class="lbl">Email <span class="hint">(if given)</span></label><input type="email" name="email" placeholder="optional" /></div>
+        </div>
+      </section>
+
+      <!-- 2. JOB -->
+      <section class="card">
+        <div class="sec-head"><span class="sec-num">2</span><h2>Job Details</h2></div>
+        <div class="grid">
+          <div class="field full" data-req><label class="lbl">Job site address<span class="req">*</span></label><input type="text" name="street" placeholder="Street address" /><span class="err-msg">Enter the job site address.</span></div>
+          <div class="field"><label class="lbl">City</label><input type="text" name="city" value="San Diego" /></div>
+          <div class="field"><label class="lbl">ZIP</label><input type="text" name="zip" inputmode="numeric" maxlength="10" /></div>
+          <div class="field full" data-req><label class="lbl">Type of job<span class="req">*</span></label>
+            <select name="job_type_label">
+              <option value="Unknown" selected>Unknown</option>
+              <option value="Interior">Interior</option>
+              <option value="Exterior">Exterior</option>
+              <option value="Interior/Exterior">Interior/Exterior</option>
+              <option value="Painter for the Day">Painter for the Day</option>
+              <option value="Cabinets">Cabinets</option>
+              <option value="DryRot">DryRot</option>
+              <option value="Front Door">Front Door</option>
+            </select>
+          </div>
+          <div class="field full"><label class="lbl">How did they hear about us?</label>
+            <select name="source_label" id="sourceSelect">
+              <option value="Other" selected>Other</option>
+              <option value="Internet leads">Internet / search</option>
+              <option value="Social Media">Social media (FB/IG)</option>
+              <option value="Referral">Referral</option>
+              <option value="Call Rail">Call Rail tracking number</option>
+            </select>
+          </div>
+          <div class="field full hidden" id="referralWrap"><label class="lbl">Who referred them?</label><input type="text" name="referral_name" /></div>
+        </div>
+      </section>
+
+      <!-- 3. NOTES -->
+      <section class="card">
+        <div class="sec-head"><span class="sec-num">3</span><h2>Project Notes</h2></div>
+        <div class="sec-sub">Scope, paint color/brand, timeline, anything the estimator or office should know. Type it fast — it gets cleaned up automatically before it lands in the CRM.</div>
+        <div class="field full"><textarea name="project_notes" placeholder="e.g. wants full interior repaint, 3 bed 2 bath, prefers Sherwin Williams, hoping to start next month…"></textarea></div>
+      </section>
+
+      <!-- 4. ROUTING -->
+      <section class="card">
+        <div class="sec-head"><span class="sec-num">4</span><h2>Where This Goes</h2></div>
+        <div class="sec-sub">The CRM entry always happens. Flip these on only if they apply to this call.</div>
+
+        <div class="toggle-row">
+          <span class="lbl">Schedule an estimate visit</span>
+          <label class="switch"><input type="checkbox" id="toggleEstimate" /><span class="slider"></span></label>
+        </div>
+        <div class="cond-body" id="estimateBody">
+          <div class="grid">
+            <div class="field"><label class="lbl">Estimate date</label><input type="date" name="estimate_date" /></div>
+            <div class="field"><label class="lbl">Estimate time</label><input type="time" name="estimate_time" /></div>
+            <div class="field full"><label class="lbl">Estimator</label><input type="text" name="estimator_name" placeholder="Who's going out" /></div>
+          </div>
+        </div>
+
+        <div class="toggle-row" style="margin-top:10px;">
+          <span class="lbl">Save a summary to Google Drive</span>
+          <label class="switch"><input type="checkbox" id="toggleDrive" name="save_to_drive" /><span class="slider"></span></label>
+        </div>
+
+        <div class="toggle-row" style="margin-top:10px;">
+          <span class="lbl">Text the caller a follow-up</span>
+          <label class="switch"><input type="checkbox" id="toggleSms" name="send_sms" checked /><span class="slider"></span></label>
+        </div>
+      </section>
+
+      <div class="actions">
+        <button type="submit" class="btn">Log This Call</button>
+        <div class="form-note">Creates a Pipeline CRM lead. Nothing gets texted or filed until you flip the switches above.</div>
+      </div>
+    </form>
+
+    <div id="successPanel" class="success hidden">
+      <h2>Logged</h2>
+      <p class="sub" id="successSub"></p>
+
+      <div id="webhookStatus" class="status-line hidden"></div>
+
+      <div class="summary-box" id="summaryText"></div>
+      <div class="summary-actions">
+        <button type="button" class="btn secondary" id="copyBtn">Copy Summary</button>
+        <a href="#" class="btn secondary" id="downloadJson">Download JSON</a>
+        <button type="button" class="btn secondary" id="newCallBtn">Log Another Call</button>
+      </div>
+      <p class="sub" style="margin:0;">Paste the summary above into the Deal in Pipeline CRM if the automated hookup isn't wired up yet.</p>
+    </div>
+
+    <footer>Chism Brothers Painting · Internal call-intake tool</footer>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  var form = document.getElementById('intakeForm');
+
+  /* Point this at the Zapier "Catch Hook" URL once the automation Zap is built.
+     Left blank = the form still works fully via Copy Summary / Download JSON,
+     it just skips the network push. See README for wiring instructions. */
+  var WEBHOOK_URL = "";
+
+  var JOB_TYPE_IDS = {
+    "Interior":369284,"Exterior":369285,"Interior/Exterior":369286,
+    "Painter for the Day":369287,"Unknown":369288,"Cabinets":5602846,
+    "DryRot":6254977,"Front Door":6269743
+  };
+  var SOURCE_IDS = {
+    "Internet leads":191380,"Social Media":2932063,"Referral":191382,
+    "Call Rail":3466842,"Other":3599266
+  };
+
+  document.getElementById('toggleEstimate').addEventListener('change', function(e){
+    document.getElementById('estimateBody').classList.toggle('open', e.target.checked);
+  });
+  document.getElementById('sourceSelect').addEventListener('change', function(e){
+    document.getElementById('referralWrap').classList.toggle('hidden', e.target.value !== 'Referral');
+  });
+
+  function markInvalid(field, bad){ field.classList.toggle('invalid', bad); }
+  var phoneRe = /[0-9][0-9\-\(\)\s\.]{6,}[0-9]/;
+
+  function validate(){
+    var ok = true, firstBad = null;
+    form.querySelectorAll('.field[data-req]').forEach(function(field){
+      var inp = field.querySelector('input,select,textarea');
+      var v = (inp.value||'').trim();
+      var bad = v === '';
+      if(!bad && field.getAttribute('data-type')==='phone') bad = !phoneRe.test(v);
+      markInvalid(field, bad);
+      if(bad){ ok = false; if(!firstBad) firstBad = field; }
+    });
+    if(firstBad) firstBad.scrollIntoView({behavior:'smooth', block:'center'});
+    return ok;
+  }
+  form.addEventListener('input', function(e){
+    var field = e.target.closest('.field'); if(field && field.classList.contains('invalid')) field.classList.remove('invalid');
+  });
+
+  function getVal(name){ var el = form.querySelector('[name="'+name+'"]'); return el ? (el.value||'').trim() : ''; }
+
+  /* M.D.YY, no leading zeros — matches the live website-lead Zap's Deal-name format */
+  function leadDate(d){
+    return (d.getMonth()+1) + '.' + d.getDate() + '.' + String(d.getFullYear()).slice(-2);
+  }
+
+  function jobSiteAddress(){
+    var parts = [getVal('street')];
+    var cityState = [getVal('city') || 'San Diego', 'CA'].join(', ');
+    parts.push(cityState + (getVal('zip') ? ' ' + getVal('zip') : ''));
+    return parts.filter(Boolean).join(', ');
+  }
+
+  function collect(){
+    var now = new Date();
+    var jobLabel = getVal('job_type_label') || 'Unknown';
+    var sourceLabel = getVal('source_label') || 'Other';
+    var data = {
+      first_name: getVal('first_name'),
+      last_name: getVal('last_name'),
+      phone: getVal('phone'),
+      email: getVal('email'),
+      job_site_address: jobSiteAddress(),
+      job_type_label: jobLabel,
+      job_type_id: JOB_TYPE_IDS[jobLabel] || JOB_TYPE_IDS['Unknown'],
+      source_label: sourceLabel,
+      source_id: SOURCE_IDS[sourceLabel] || SOURCE_IDS['Other'],
+      referral_name: getVal('referral_name'),
+      project_notes: getVal('project_notes'),
+      schedule_estimate: document.getElementById('toggleEstimate').checked,
+      estimate_date: getVal('estimate_date'),
+      estimate_time: getVal('estimate_time'),
+      estimator_name: getVal('estimator_name'),
+      save_to_drive: document.getElementById('toggleDrive').checked,
+      send_sms: document.getElementById('toggleSms').checked,
+      lead_date: leadDate(now),
+      logged_at: now.toISOString()
+    };
+    data.deal_name = data.last_name + ', ' + data.first_name + ', ' + data.lead_date;
+    data.deal_summary =
+      data.lead_date + '\n' +
+      'JC ZAP - Phone lead: ' + data.first_name + ' ' + data.last_name + ', ' +
+      data.job_type_label + ', ' + data.job_site_address +
+      (data.project_notes ? '. ' + data.project_notes : '.');
+    return data;
+  }
+
+  var submitBtn = form.querySelector('.btn');
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(!validate()) return;
+
+    var payload = collect();
+
+    document.getElementById('successSub').textContent =
+      'Deal name: ' + payload.deal_name;
+    document.getElementById('summaryText').textContent = payload.deal_summary;
+
+    var blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+    var url = URL.createObjectURL(blob);
+    var dl = document.getElementById('downloadJson');
+    dl.href = url;
+    dl.download = 'cbp-call-' + (payload.last_name||'lead').toLowerCase().replace(/[^a-z0-9]/g,'') + '.json';
+
+    var statusEl = document.getElementById('webhookStatus');
+    if(WEBHOOK_URL){
+      statusEl.classList.remove('hidden','ok','err');
+      statusEl.textContent = 'Sending to automation…';
+      fetch(WEBHOOK_URL, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+      }).then(function(res){
+        if(!res.ok) throw new Error('HTTP ' + res.status);
+        statusEl.classList.add('ok');
+        statusEl.textContent = 'Sent to the automation — CRM/Calendar/Drive/SMS steps will run.';
+      }).catch(function(err){
+        statusEl.classList.add('err');
+        statusEl.textContent = 'Automation push failed (' + err.message + '). Use Copy Summary below as a backup.';
+      });
+    } else {
+      statusEl.classList.remove('hidden');
+      statusEl.textContent = 'Automation hookup not wired yet — copy the summary below into Pipeline CRM manually.';
+    }
+
+    form.classList.add('hidden');
+    var s = document.getElementById('successPanel');
+    s.classList.remove('hidden');
+    s.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  document.getElementById('copyBtn').addEventListener('click', function(){
+    var text = document.getElementById('summaryText').textContent;
+    navigator.clipboard.writeText(text).then(function(){
+      var btn = document.getElementById('copyBtn');
+      var orig = btn.textContent;
+      btn.textContent = 'Copied ✓';
+      setTimeout(function(){ btn.textContent = orig; }, 1600);
+    }).catch(function(){ alert(text); });
+  });
+
+  document.getElementById('newCallBtn').addEventListener('click', function(){
+    form.reset();
+    document.getElementById('estimateBody').classList.remove('open');
+    document.getElementById('referralWrap').classList.add('hidden');
+    document.getElementById('toggleSms').checked = true;
+    form.classList.remove('hidden');
+    document.getElementById('successPanel').classList.add('hidden');
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>
