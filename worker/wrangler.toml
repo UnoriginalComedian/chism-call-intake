@@ -1,0 +1,12 @@
+name = "chism-calendar-availability"
+main = "calendar-availability.js"
+compatibility_date = "2026-01-01"
+
+# Non-secret vars can go here directly. Secrets (private key, etc.) are set via
+# `wrangler secret put <NAME>` instead - see ../README.md.
+[vars]
+ALLOWED_ORIGIN = "https://unoriginalcomedian.github.io"
+WORKING_HOURS_START = "08:00"
+WORKING_HOURS_END = "17:00"
+SLOT_MINUTES = "60"
+BUFFER_MINUTES = "15"
