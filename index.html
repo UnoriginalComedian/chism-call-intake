@@ -264,10 +264,11 @@
   "use strict";
   var form = document.getElementById('intakeForm');
 
-  /* Point this at the Zapier "Catch Hook" URL once the automation Zap is built.
-     Left blank = the form still works fully via Copy Summary / Download JSON,
-     it just skips the network push. See README for wiring instructions. */
-  var WEBHOOK_URL = "";
+  /* Zapier "Catch Hook" URL for the Call Intake Zap (373681790). The Zap is
+     built and tested but not yet published - it's waiting on Mariana's field
+     review. Submissions here are harmless until it's published; Copy Summary /
+     Download JSON still work as the manual fallback either way. */
+  var WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/27889606/448dqll/";
 
   var JOB_TYPE_IDS = {
     "Interior":369284,"Exterior":369285,"Interior/Exterior":369286,
